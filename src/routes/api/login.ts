@@ -21,10 +21,8 @@ export const post: RequestHandler<void, LoginRequest> = async ({ host, body }) =
 		};
 	}
 
-	const remoteip = host;
-
 	const recaptchaVerifyResponse = await fetch(
-		`https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}&remoteip=${remoteip}`,
+		`https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${recaptchaToken}&remoteip=${host}`,
 		{
 			method: 'POST'
 		}
@@ -32,9 +30,6 @@ export const post: RequestHandler<void, LoginRequest> = async ({ host, body }) =
 
 	const json: {
 		success: boolean;
-		hostname: string;
-		challenge_ts: number;
-		'error-codes': string[];
 	} = await recaptchaVerifyResponse.json();
 
 	if (!json.success) {
