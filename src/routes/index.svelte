@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { User } from '$lib/types';
+
 	import { onMount } from 'svelte';
 
 	const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
@@ -22,7 +24,7 @@
 	const resetCaptcha = () => window.grecaptcha.reset();
 
 	const handleCaptchaCallback = async (token: string) => {
-		await fetch('/api/login', {
+		const response = await fetch('/api/login', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -35,6 +37,15 @@
 		});
 
 		requests += 1;
+
+		const json: User | string = await response.json();
+
+		if (response.status === 200) {
+			// do something with response
+		} else {
+			// show error message
+			error = json as string;
+		}
 
 		// reset recaptcha for future requests
 		resetCaptcha();

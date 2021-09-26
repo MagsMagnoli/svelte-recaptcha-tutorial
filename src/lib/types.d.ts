@@ -9,3 +9,8 @@ export declare global {
 		handleCaptchaError: () => void;
 	}
 }
+
+export type User = {
+	id: number;
+	username: string;
+};

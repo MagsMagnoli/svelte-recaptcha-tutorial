@@ -1,7 +1,7 @@
-# Stage 2 Recaptcha Frontend
+# Stage 3 Recaptcha Backend
 
-- added recaptcha site key as an environment variable
-- implemented the recaptcha callback functions
+- added recaptcha secret key as an environment variable
+- implemented the recaptcha verification request
 
 Start the app by running
 
