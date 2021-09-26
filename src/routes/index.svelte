@@ -5,7 +5,21 @@
 <script>
 	let requests = 0;
 
-	const onSubmit = () => {
+	let username = '';
+	let password = '';
+
+	const onSubmit = async () => {
+		await fetch('/api/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				username,
+				password
+			})
+		});
+
 		requests += 1;
 	};
 </script>
@@ -21,21 +35,25 @@
 			<div class="form-group">
 				<label class="login-label" for="username">Username</label>
 				<input
+					id="username"
 					class="login-input mt-1"
 					name="username"
 					type="text"
 					placeholder="Type your username"
 					required
+					bind:value={username}
 				/>
 			</div>
 			<div class="form-group mt-2">
 				<label class="login-label" for="password">Password</label>
 				<input
+					id="password"
 					class="login-input mt-1"
 					name="password"
 					type="password"
 					placeholder="Type your password"
 					required
+					bind:value={password}
 				/>
 			</div>
 			<button class="login-button mt-4" type="submit">Login</button>
