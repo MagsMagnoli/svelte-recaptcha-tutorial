@@ -1,14 +1,27 @@
-<script context="module" lang="ts">
-	export const prerender = true;
-</script>
+<script lang="ts">
+	import { onMount } from 'svelte';
 
-<script>
+	const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+
+	onMount(() => {
+		window.handleCaptchaCallback = handleCaptchaCallback;
+		window.handleCaptchaError = handleCaptchaError;
+		window.resetCaptcha = resetCaptcha;
+	});
+
 	let requests = 0;
 
 	let username = '';
 	let password = '';
+	let error = '';
 
-	const onSubmit = async () => {
+	const handleCaptchaError = () => {
+		error = 'Recaptcha error. Please reload the page';
+	};
+
+	const resetCaptcha = () => window.grecaptcha.reset();
+
+	const handleCaptchaCallback = async (token: string) => {
 		await fetch('/api/login', {
 			method: 'POST',
 			headers: {
@@ -16,11 +29,23 @@
 			},
 			body: JSON.stringify({
 				username,
-				password
+				password,
+				recaptchaToken: token
 			})
 		});
 
 		requests += 1;
+
+		// reset recaptcha for future requests
+		resetCaptcha();
+	};
+
+	const handleSubmit = () => {
+		// reset any errors
+		error = '';
+
+		// tell recaptcha to process a request
+		window.grecaptcha.execute();
 	};
 </script>
 
@@ -31,7 +56,7 @@
 <section class="login">
 	<div class="login-container">
 		<h1 class="login-header">Login</h1>
-		<form class="login-form" on:submit|preventDefault={onSubmit}>
+		<form class="login-form" on:submit|preventDefault={handleSubmit}>
 			<div class="form-group">
 				<label class="login-label" for="username">Username</label>
 				<input
@@ -56,6 +81,19 @@
 					bind:value={password}
 				/>
 			</div>
+			{#if error}
+				<div>
+					<small class="text-yellow-300 font-bold">{error}</small>
+				</div>
+			{/if}
+			<div
+				class="g-recaptcha"
+				data-sitekey={RECAPTCHA_SITE_KEY}
+				data-callback="handleCaptchaCallback"
+				data-expired-callback="resetCaptcha"
+				data-error-callback="handleCaptchaError"
+				data-size="invisible"
+			/>
 			<button class="login-button mt-4" type="submit">Login</button>
 			<span class="mt-2" class:over9000={requests > 9000}>Requests: {requests}</span>
 		</form>

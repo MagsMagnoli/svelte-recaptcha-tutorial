@@ -1,7 +1,7 @@
-# Stage 1 Bootstrap
+# Stage 2 Recaptcha Frontend
 
-- used npm init svelte@next to create the svelte kit skeleton
-- removed unused code
+- added recaptcha site key as an environment variable
+- implemented the recaptcha callback functions
 
 Start the app by running
 
