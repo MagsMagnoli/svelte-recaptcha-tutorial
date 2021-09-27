@@ -1,7 +1,6 @@
-# Stage 3 Recaptcha Backend
+# Svelte reCAPTCHA Tutorial
 
-- added recaptcha secret key as an environment variable
-- implemented the recaptcha verification request
+The repository for [this article](https://mags.ai/blog/add-recaptcha-to-a-svelte-app) on Mags.ai
 
 Start the app by running
 
